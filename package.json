@@ -1,0 +1,12 @@
+{
+  "name": "workflow",
+  "version": "0.0.1",
+  "description": "set a basic workflof",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "?.git"
+  },
+  "author": "Sergiy Sidorenko",
+  "license": "ISC"
+}
