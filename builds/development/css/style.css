@@ -260,7 +260,7 @@ section {
 }
 .rclick .preview img {
   position: absolute;
-  z-index: 90;
+  z-index: 91;
   max-width: 400px;
   display: block;
   border: 1px solid #FCF4DC;
