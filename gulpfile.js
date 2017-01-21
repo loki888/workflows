@@ -8,6 +8,10 @@ var gulpif  = require("gulp-if");
 var uglify = require("gulp-uglify");
 var minifyHTML = require("gulp-minify-html");
 var jsonminify = require("gulp-jsonminify");
+
+var imagemin = require("gulp-imagemin");
+
+
 var concat = require("gulp-concat");
 
 var env,
@@ -80,6 +84,8 @@ gulp.task('watch', function(){
     gulp.watch('components/sass/*.scss', ['compass']);
     gulp.watch('builds/development/*.html', ['html']);
     gulp.watch('builds/development/js/*.json', ['json']);
+    gulp.watch('builds/development/images/**/*.*', ['images']);
+
 });
 
 gulp.task('connect', function(){
@@ -93,7 +99,17 @@ gulp.task('html', function(){
     gulp.src('builds/development/*.html')
     .pipe(gulpif(env === 'prodaction' , minifyHTML()))
     .pipe(gulpif(env === 'prodaction' , gulp.dest(outputDir)))
-    .pipe(connect.reload());
+    .pipe(connect.reload()); // reload a browser
+});
+
+gulp.task('images', function(){
+    gulp.src('builds/development/images/**/*.*')
+    .pipe(gulpif(env === 'prodaction' , imagemin({
+        progressive: true,
+        svgoPlugins: [{ removeViewBox: false }]
+    })))
+    .pipe(gulpif(env === 'prodaction' , gulp.dest(outputDir + 'images')))
+    .pipe(connect.reload()); // reload a browser
 });
 
 gulp.task('json', function(){
@@ -103,5 +119,5 @@ gulp.task('json', function(){
     .pipe(connect.reload());
 });
 
-gulp.task('default', ['html', 'json', 'coffee', 'js', 'compass', 'connect', 'watch']);
+gulp.task('default', ['html', 'json', 'coffee', 'js', 'compass', 'images', 'connect', 'watch']);
 
