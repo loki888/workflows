@@ -4,6 +4,9 @@ var coffee = require("gulp-coffee");
 var browserify = require("gulp-browserify");
 var compass = require("gulp-compass");
 var connect = require("gulp-connect");
+var gulpif  = require("gulp-if");
+var uglify = require("gulp-uglify");
+var minifyHTML = require("gulp-minify-html");
 var concat = require("gulp-concat");
 
 var env,
@@ -53,6 +56,7 @@ gulp.task('js', [], function(){ // [] -- dependensis
     gulp.src(jsSourses)
         .pipe(concat('script.js')) // final file name
         .pipe(browserify())
+        .pipe(gulpif(env === 'prodaction', uglify()))
         .pipe(gulp.dest(outputDir + '/js'))
         .pipe(connect.reload());
 });
@@ -73,7 +77,7 @@ gulp.task('watch', function(){
     gulp.watch(coffeeSourses, ['coffee']);
     gulp.watch(jsSourses, ['js']);
     gulp.watch('components/sass/*.scss', ['compass']);
-    gulp.watch(htmlSourses, ['html']);
+    gulp.watch('builds/development/*.html', ['html']);
     gulp.watch(jsonSourses, ['json']);
 });
 
@@ -85,7 +89,9 @@ gulp.task('connect', function(){
 });
 
 gulp.task('html', function(){
-    gulp.src(htmlSourses)
+    gulp.src('builds/development/*.html')
+    .pipe(gulpif(env === 'prodaction' , minifyHTML()))
+    .pipe(gulpif(env === 'prodaction' , gulp.dest(outputDir)))
     .pipe(connect.reload());
 });
 
